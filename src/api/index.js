@@ -1,6 +1,5 @@
-import * as product from './product' ;
+import * as auth from './auth'
 
-export default{
-    product
+export default {
+  auth
 }
-//export default a;

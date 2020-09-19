@@ -1,7 +1,32 @@
 import axios from 'axios'
- 
-const API = axios.create({
-    baseURL: 'http://localhost:8080/api/v1',
+import Cookies from 'js-cookie'
+
+const APIAuth = axios.create({
+  baseURL: 'localhost:8080'
 });
 
-export default API;
+APIAuth.interceptors.request.use(
+  req => {
+    console.log(req);
+    req.headers.authorization = `Bearer ${Cookies.get('token')}`;
+    return req;
+  },
+  err => {
+    console.log(err);
+    return Promise.reject(err);
+  }
+);
+
+APIAuth.interceptors.response.use(
+  res => {
+    console.log(res.data);
+  },
+  err => {
+    if (err.response.status === 401) {
+      Cookies.remove('token');
+      window.location = '/';
+    };
+  }
+);
+
+export default APIAuth
